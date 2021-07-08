@@ -37,7 +37,7 @@ public class ScanCheckerTest {
     }
 
     @Test
-    public void testValidInput() {
+    public void testErrorInput() {
         try {
             initExpectedErrors();
             System.setIn(new FileInputStream("resources/test/bad_inputs_test.txt"));
