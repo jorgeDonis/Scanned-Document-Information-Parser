@@ -79,6 +79,9 @@ public class ConsoleScanReader extends ScanReader {
 
     private Scan parseFields(String[] fields) throws ScanParsingException {
         Scan scan = new Scan();
+        if (fields.length != expectedFields.length)
+            throw new ScanParsingException(String.format("Expected %d arguments, got %d",
+                expectedFields.length, fields.length));
         try {
             scan.id = Long.parseLong(fields[0]);
         } catch (NumberFormatException e) {
