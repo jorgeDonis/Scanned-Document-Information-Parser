@@ -40,4 +40,8 @@ public class ConsoleReaderTest
             fail();
         }
     }
+
+    /**
+     * More tests regarding each field should be implemented.
+     */
 }

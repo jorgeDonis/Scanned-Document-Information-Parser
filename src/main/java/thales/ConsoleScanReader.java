@@ -115,9 +115,10 @@ public class ConsoleScanReader extends ScanReader {
     @Override
     public Scan readSingleScan() throws ScanParsingException {
         String line = scanner.next();
-        ++noReadLines;
         try {
-            return parseLine(line);
+            Scan scan = parseLine(line);
+            ++noReadLines;
+            return scan;
         } catch (ScanParsingException e) {
             throw e;
         }
