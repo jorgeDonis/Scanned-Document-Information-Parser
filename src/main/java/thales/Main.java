@@ -1,14 +1,16 @@
 package thales;
 
+import thales.Exception.ScanException;
+
 public class Main {
     public static void main(String[] args) {
         ScanReader scanReader = new ConsoleScanReader();
-        ScanRegistry scanRegistry = new ScanRegistry();
+        ScanChecker scanChecker = new ScanChecker();
         while (scanReader.nextScanAvailable()) {
-            Scan scan = scanReader.readSingleScan();
             try {
-                scanRegistry.addScan(scan);
-            } catch (ScanInsertionException e) {
+                Scan scan = scanReader.readSingleScan();
+                scanChecker.checkScan(scan);
+            } catch (ScanException e) {
                 System.err.println(e.getMessage());
             }
         }

@@ -1,6 +1,6 @@
 package thales;
 
-import java.util.ArrayList;
+import thales.Exception.ScanParsingException;
 
 /**
  * This class is presented as in interface in order to allow easy integration
@@ -13,7 +13,7 @@ public abstract class ScanReader {
      * Performs any kind of initialization, if necessary.
      * @return Single scan if reading was succesful.
      */
-    public abstract Scan readSingleScan();
+    public abstract Scan readSingleScan() throws ScanParsingException;
 
     public abstract boolean nextScanAvailable();
 
@@ -26,5 +26,5 @@ public abstract class ScanReader {
      * 
      * @return Array of scans
      */
-    public abstract ArrayList<Scan> readScanArray();
+    public abstract Scan[] readScanArray();
 }
