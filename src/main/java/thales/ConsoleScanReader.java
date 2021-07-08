@@ -5,6 +5,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import thales.Exception.ScanConsoleException;
 import thales.Exception.ScanParsingException;
 
 public class ConsoleScanReader extends ScanReader {
@@ -24,11 +25,10 @@ public class ConsoleScanReader extends ScanReader {
 
         public void checkField(String comparedField) throws ScanParsingException {
             Matcher matcher = pattern.matcher(comparedField);
-            if (!matcher.find()) {
+            if (!matcher.find())
                 throw new ScanParsingException(
-                    String.format("Error while parsing the %s field. Expected %s", fieldName, description)
+                    String.format("Error while parsing the %s field. Expected %s. Got %s", fieldName, description, comparedField)
                 );
-            }
         }
     }
 
@@ -49,16 +49,16 @@ public class ConsoleScanReader extends ScanReader {
 
     private Scanner scanner;
 
-    public ConsoleScanReader() {
+    public ConsoleScanReader() throws ScanConsoleException {
         noReadLines = 0;
         scanner = new Scanner(System.in);
         System.out.print("Total number of records: ");
         try {
             noLines = scanner.nextInt();
             if (noLines <= 0)
-                System.err.println("Number of total records has to be positive");
+                throw new ScanConsoleException("Number of total records has to be positive");
         } catch (InputMismatchException e) {
-            System.err.println("Number of total records has to be numeric");
+            throw new ScanConsoleException("Number of total records has to be numeric");
         }
     }
 
@@ -90,15 +90,16 @@ public class ConsoleScanReader extends ScanReader {
         return scan;
     }
 
-    @Override
-    public Scan readSingleScan() throws ScanParsingException {
-        String line = scanner.nextLine();
+    private Scan parseLine(String line) throws ScanParsingException {
+        if (line.endsWith(","))
+            throw new ScanParsingException("Incorrectly placed commas");
         String[] readFields = line.split(",");
         try {
             for (int i = 0; i < readFields.length; ++i) {
                 if (i == expectedFields.length)
-                    throw new ScanParsingException(String.format("Too many scan fields, expected %d", expectedFields.length));
-                    expectedFields[i].checkField(readFields[i]);
+                    throw new ScanParsingException(
+                            String.format("Too many scan fields, expected %d", expectedFields.length));
+                expectedFields[i].checkField(readFields[i]);
             }
             return parseFields(readFields);
         } catch (ScanParsingException e) {
@@ -106,4 +107,13 @@ public class ConsoleScanReader extends ScanReader {
         }
     }
 
+    @Override
+    public Scan readSingleScan() throws ScanParsingException {
+        String line = scanner.next();
+        try {
+            return parseLine(line);
+        } catch (ScanParsingException e) {
+            throw e;
+        }
+    }
 }
