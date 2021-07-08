@@ -27,4 +27,9 @@ public abstract class ScanReader {
      * @return Array of scans
      */
     public abstract Scan[] readScanArray();
+
+    /**
+     * Closes file, socket or console
+     */
+    public abstract void close();
 }

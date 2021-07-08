@@ -10,6 +10,7 @@ public class Main {
             while (scanReader.nextScanAvailable()) {
                 Scan scan = scanReader.readSingleScan();
                 scanChecker.checkScan(scan);
+            scanReader.close();
             }
         } catch (ScanException e) {
             System.err.println(e.getMessage());

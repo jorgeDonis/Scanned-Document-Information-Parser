@@ -33,21 +33,26 @@ public class ConsoleScanReader extends ScanReader {
     }
 
     private final ExpectedScanField[] expectedFields = {
-        new ExpectedScanField("\\d+",       "Scan line number", "Unsigned integer"),
-        new ExpectedScanField("[A-Z]+",     "Document type",    "P (Passport), ID or DL (Driver's License)"),
-        new ExpectedScanField("[A-Z]{3}",   "Issuing country",  "3 letter ICAO country"),
-        new ExpectedScanField("[a-zA-Z]+",  "Last name",        "Alphanumeric string"),
-        new ExpectedScanField("[a-zA-Z]+",  "First name",       "Alphanumeric string"),
-        new ExpectedScanField("\\d+",       "Document number",  "Unsigned integer"),
-        new ExpectedScanField("[A-Z]{3}",   "Nationality",      "3 letter ICAO country"),
-        new ExpectedScanField("\\d{6}",     "Date of birth",    "YYMMDD formatted date"),
-        new ExpectedScanField("\\d{6}",     "Date of expiry",     "YYMMDD formatted date"),
+        new ExpectedScanField("\\b\\d+\\b",       "Scan line number", "Unsigned integer"),
+        new ExpectedScanField("\\b[A-Z]+\\b",     "Document type",    "P (Passport), ID or DL (Driver's License)"),
+        new ExpectedScanField("\\b[A-Z]{3}\\b",   "Issuing country",  "3 letter ICAO country"),
+        new ExpectedScanField("\\b[a-zA-Z]+\\b",  "Last name",        "Alphanumeric string"),
+        new ExpectedScanField("\\b[a-zA-Z]+\\b",  "First name",       "Alphanumeric string"),
+        new ExpectedScanField("\\b\\d+\\b",       "Document number",  "Unsigned integer"),
+        new ExpectedScanField("\\b[A-Z]{3}\\b",   "Nationality",      "3 letter ICAO country"),
+        new ExpectedScanField("\\b\\d{6}\\b",     "Date of birth",    "YYMMDD formatted date"),
+        new ExpectedScanField("\\b\\d{6}\\b",     "Date of expiry",   "YYMMDD formatted date"),
     };
 
     private int noLines;
     private int noReadLines;
 
     private Scanner scanner;
+
+    @Override
+    public void close() {
+        scanner.close();
+    }
 
     public ConsoleScanReader() throws ScanConsoleException {
         noReadLines = 0;
@@ -110,6 +115,7 @@ public class ConsoleScanReader extends ScanReader {
     @Override
     public Scan readSingleScan() throws ScanParsingException {
         String line = scanner.next();
+        ++noReadLines;
         try {
             return parseLine(line);
         } catch (ScanParsingException e) {
